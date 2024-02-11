@@ -1,10 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import NewTaskForm from './NewTaskForm'
 import TodoList from './TodoList'
 
 function App() {
-  const [todo, setTodo] = useState([])
+  const [todo, setTodo] = useState(()=>{
+    const localval = localStorage.getItem("ITEMS")
+    if (localval == null) return []
+    return JSON.parse(localval)
+  })
+
+  useEffect(()=>{
+    localStorage.setItem("ITEMS",JSON.stringify(todo))
+  },[todo])
 
   function addTodo(title){
     setTodo((currentTodos) => {
@@ -22,12 +30,11 @@ function App() {
       })
     })
   }
-
+// async
   function deleteTodo(id){
-    setTodo(currentTodo => {
-      return currentTodo.filter(todo => todo.id !== id)
-    })
-  }
+    const updatedTodos = currentTodo.filter(todo => todo.id !== id);
+    setTodo(updatedTodos);
+    }
 
   return (
     <>
